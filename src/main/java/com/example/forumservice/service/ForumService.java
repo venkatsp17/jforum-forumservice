@@ -145,4 +145,12 @@ public class ForumService {
 
         return response;
     }
+
+    public void deleteForum(Long forumId) {
+
+        Forum forum = forumRepository.findById(forumId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessageConstants.FORUM_NOT_FOUND));
+
+        forumRepository.delete(forum);
+    }
 }

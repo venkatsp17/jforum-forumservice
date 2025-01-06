@@ -65,4 +65,16 @@ public class ForumController {
 
         return ResponseEntity.status(HttpStatusConstants.OK).body(response);
     }
+
+    @DeleteMapping("/{forumId}")
+    public ResponseEntity<Void> deleteForum(@PathVariable Long forumId) {
+
+        if (forumId == null || forumId <= 0) {
+            throw new BadRequestException(ErrorMessageConstants.FORUM_ID_MUST_BE_VALID);
+        }
+
+        forumService.deleteForum(forumId);
+
+        return ResponseEntity.noContent().build();
+    }
 }
