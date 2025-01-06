@@ -5,6 +5,7 @@ import com.example.forumservice.client.dto.OnlineUserDTO;
 import com.example.forumservice.client.dto.UserDTO;
 import com.example.forumservice.constant.ApplicationConstants;
 import com.example.forumservice.constant.ErrorMessageConstants;
+import com.example.forumservice.constant.ValidationMessageConstants;
 import com.example.forumservice.dto.CategoryDTO;
 import com.example.forumservice.dto.ForumDTO;
 import com.example.forumservice.dto.ForumListResponse;
@@ -59,6 +60,43 @@ public class ForumService {
         return savedForum;
     }
 
+    public Forum updateForum(ForumDTO forumDTO) {
+
+        if (forumDTO == null) {
+            throw new BadRequestException(ErrorMessageConstants.FORUM_CANNOT_BE_NULL);
+        }
+
+        if (forumDTO.getId() == null || forumDTO.getId() <= 0) {
+            throw new BadRequestException(ErrorMessageConstants.FORUM_ID_MUST_BE_VALID);
+        }
+
+        Forum existingForum = forumRepository.findById(forumDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessageConstants.FORUM_NOT_FOUND));
+
+        if (forumDTO.getName() == null || forumDTO.getName().isEmpty()) {
+            throw new BadRequestException(ValidationMessageConstants.FORUM_NAME_REQUIRED);
+        }
+
+        if (forumDTO.getCategoryId() == null || forumDTO.getCategoryId() <= 0) {
+            throw new BadRequestException(ValidationMessageConstants.FORUM_CATEGORY_REQUIRED);
+        }
+
+        Category category = categoryRepository.findById(forumDTO.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessageConstants.CATEGORY_NOT_FOUND));
+
+        existingForum.setName(forumDTO.getName());
+        existingForum.setDescription(forumDTO.getDescription());
+
+        existingForum.setModerated(forumDTO.getModerated() != null ? forumDTO.getModerated() : existingForum.isModerated());
+        existingForum.setAllowAnonymousPosts(forumDTO.getAllowAnonymous() != null ? forumDTO.getAllowAnonymous() : existingForum.isAllowAnonymousPosts());
+
+        existingForum.setCategory(category);
+
+        Forum updatedForum = forumRepository.save(existingForum);
+
+        return updatedForum;
+    }
+
     public ForumListResponse getForums() {
 
         List<Category> categories = categoryRepository.findAll();
@@ -74,6 +112,8 @@ public class ForumService {
                 forumDTO.setName(forum.getName());
                 forumDTO.setDescription(forum.getDescription());
                 forumDTO.setCategoryId(category.getId());
+                forumDTO.setModerated(forum.isModerated());
+                forumDTO.setAllowAnonymous(forum.isAllowAnonymousPosts());
                 return forumDTO;
             }).collect(Collectors.toList());
             categoryDTO.setForums(forumDTOs);
