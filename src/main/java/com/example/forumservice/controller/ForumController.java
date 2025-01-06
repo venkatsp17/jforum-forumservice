@@ -114,4 +114,21 @@ public class ForumController {
         return ResponseEntity.status(HttpStatusConstants.OK).body(response);
     }
 
+    @GetMapping("/{forumId}/limitedTime")
+    public ResponseEntity<ApiResponse<Long>> getForumLimitedTime(@PathVariable Long forumId) {
+
+        if (forumId == null || forumId <= 0) {
+            throw new BadRequestException(ErrorMessageConstants.FORUM_ID_MUST_BE_VALID);
+        }
+
+        long limitedTime = forumService.getForumLimitedTime(forumId);
+
+        ApiResponse<Long> response = new ApiResponse<>(
+                HttpStatusConstants.OK.name(),
+                limitedTime,
+                "Limited time retrieved successfully."
+        );
+
+        return ResponseEntity.status(HttpStatusConstants.OK).body(response);
+    }
 }

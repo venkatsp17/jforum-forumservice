@@ -14,12 +14,15 @@ import com.example.forumservice.exception.BadRequestException;
 import com.example.forumservice.exception.ResourceNotFoundException;
 import com.example.forumservice.model.Category;
 import com.example.forumservice.model.Forum;
+import com.example.forumservice.model.ForumLimitedTime;
 import com.example.forumservice.repository.CategoryRepository;
+import com.example.forumservice.repository.ForumLimitedTimeRepository;
 import com.example.forumservice.repository.ForumRepository;
 import com.example.forumservice.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,12 +31,16 @@ public class ForumService {
     private final ForumRepository forumRepository;
     private final CategoryRepository categoryRepository;
     private final UserManagementClient userManagementClient;
+    private final ForumLimitedTimeRepository forumLimitedTimeRepository;
 
-    public ForumService(ForumRepository forumRepository, CategoryRepository categoryRepository,
-                        UserManagementClient userManagementClient) {
+    public ForumService(ForumRepository forumRepository,
+                        CategoryRepository categoryRepository,
+                        UserManagementClient userManagementClient,
+                        ForumLimitedTimeRepository forumLimitedTimeRepository) {
         this.forumRepository = forumRepository;
         this.categoryRepository = categoryRepository;
         this.userManagementClient = userManagementClient;
+        this.forumLimitedTimeRepository = forumLimitedTimeRepository;
     }
 
     public Forum addForum(ForumDTO forumDTO) {
@@ -198,9 +205,20 @@ public class ForumService {
 
             forumRepository.save(forumToMove);
             forumRepository.save(nextForum);
+        } else {
+            throw new BadRequestException(ErrorMessageConstants.FORUM_ALREADY_AT_BOTTOM);
         }
 
         return forumToMove;
     }
 
+    public long getForumLimitedTime(Long forumId) {
+
+        Forum forum = forumRepository.findById(forumId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessageConstants.FORUM_NOT_FOUND));
+
+        Optional<ForumLimitedTime> forumLimitedTimeOptional = forumLimitedTimeRepository.findByForum(forum);
+
+        return forumLimitedTimeOptional.map(ForumLimitedTime::getLimitedTime).orElse(0L);
+    }
 }
