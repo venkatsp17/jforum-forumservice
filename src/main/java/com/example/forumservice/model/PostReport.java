@@ -30,4 +30,8 @@ public class PostReport {
 
     @Column(nullable = false)
     private Long userId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PostReportStatus status = PostReportStatus.UNRESOLVED;
 }

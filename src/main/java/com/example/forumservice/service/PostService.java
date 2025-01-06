@@ -4,11 +4,13 @@ import com.example.forumservice.constant.ErrorMessageConstants;
 import com.example.forumservice.exception.ResourceNotFoundException;
 import com.example.forumservice.model.Post;
 import com.example.forumservice.model.PostReport;
+import com.example.forumservice.model.PostReportStatus;
 import com.example.forumservice.repository.PostRepository;
 import com.example.forumservice.repository.PostReportRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class PostService {
@@ -31,7 +33,12 @@ public class PostService {
         postReport.setDescription(description);
         postReport.setReportDate(new Date());
         postReport.setUserId(userId);
+        postReport.setStatus(PostReportStatus.UNRESOLVED);
 
         postReportRepository.save(postReport);
+    }
+
+    public List<PostReport> getUnresolvedPostReports() {
+        return postReportRepository.findByStatus(PostReportStatus.UNRESOLVED);
     }
 }
