@@ -5,7 +5,6 @@ import com.example.forumservice.constant.HttpStatusConstants;
 import com.example.forumservice.dto.ApiResponse;
 import com.example.forumservice.dto.PaginatedResponseDTO;
 import com.example.forumservice.dto.PostReportDTO;
-import com.example.forumservice.exception.BadRequestException;
 import com.example.forumservice.model.PostReport;
 import com.example.forumservice.service.PostService;
 import com.example.forumservice.utils.ModelMapperUtils;
@@ -57,6 +56,24 @@ public class PostReportController {
                 HttpStatusConstants.OK.name(),
                 paginatedReports,
                 "Resolved post reports retrieved successfully."
+        );
+
+        return ResponseEntity.status(HttpStatusConstants.OK).body(response);
+    }
+
+    @PutMapping("/{reportId}/resolve")
+    public ResponseEntity<ApiResponse<Object>> resolvePostReport(
+            @PathVariable Long reportId) {
+
+        if (reportId == null || reportId <= 0) {
+            throw new BadRequestException(ErrorMessageConstants.INVALID_REPORT_ID);
+        }
+
+        postService.resolvePostReport(reportId);
+
+        ApiResponse<Object> response = new ApiResponse<>(
+                HttpStatusConstants.OK.name(),
+                "Post report resolved successfully."
         );
 
         return ResponseEntity.status(HttpStatusConstants.OK).body(response);

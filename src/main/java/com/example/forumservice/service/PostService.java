@@ -66,4 +66,13 @@ public class PostService {
 
         return paginatedResponse;
     }
+
+    public void resolvePostReport(Long reportId) {
+
+        PostReport report = postReportRepository.findById(reportId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessageConstants.POST_REPORT_NOT_FOUND));
+
+        report.setStatus(PostReportStatus.RESOLVED);
+        postReportRepository.save(report);
+    }
 }

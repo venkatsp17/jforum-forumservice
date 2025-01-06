@@ -14,4 +14,7 @@ public class ErrorMessageConstants {
     public static final String AUTH_TOKEN_MISSING = "Authentication token is missing.";
     public static final String USER_NOT_FOUND = "User not found.";
     public static final String INVALID_PAGE_NUMBER = "Page number must be greater than zero.";
+    public static final String INVALID_REPORT_ID = "Invalid report ID.";
+    public static final String POST_REPORT_NOT_FOUND = "Post report not found.";
+    public static final String USER_CANNOT_MANIPULATE_REPORT = "You do not have permission to manipulate this report.";
 }
