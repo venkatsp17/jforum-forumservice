@@ -77,4 +77,22 @@ public class ForumController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{forumId}/moveUp")
+    public ResponseEntity<ApiResponse<Forum>> moveForumUp(@PathVariable Long forumId) {
+
+        if (forumId == null || forumId <= 0) {
+            throw new BadRequestException(ErrorMessageConstants.FORUM_ID_MUST_BE_VALID);
+        }
+
+        Forum movedForum = forumService.moveForumUp(forumId);
+
+        ApiResponse<Forum> response = new ApiResponse<>(
+                HttpStatusConstants.OK.name(),
+                movedForum,
+                "Forum moved up successfully."
+        );
+
+        return ResponseEntity.status(HttpStatusConstants.OK).body(response);
+    }
 }

@@ -17,9 +17,7 @@ import com.example.forumservice.model.Forum;
 import com.example.forumservice.repository.CategoryRepository;
 import com.example.forumservice.repository.ForumRepository;
 import com.example.forumservice.utils.DateUtils;
-
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,10 +84,8 @@ public class ForumService {
 
         existingForum.setName(forumDTO.getName());
         existingForum.setDescription(forumDTO.getDescription());
-
         existingForum.setModerated(forumDTO.getModerated() != null ? forumDTO.getModerated() : existingForum.isModerated());
         existingForum.setAllowAnonymousPosts(forumDTO.getAllowAnonymous() != null ? forumDTO.getAllowAnonymous() : existingForum.isAllowAnonymousPosts());
-
         existingForum.setCategory(category);
 
         Forum updatedForum = forumRepository.save(existingForum);
@@ -152,5 +148,32 @@ public class ForumService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessageConstants.FORUM_NOT_FOUND));
 
         forumRepository.delete(forum);
+    }
+
+    public Forum moveForumUp(Long forumId) {
+
+        Forum forumToMove = forumRepository.findById(forumId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessageConstants.FORUM_NOT_FOUND));
+
+        Category category = forumToMove.getCategory();
+
+        List<Forum> forumsInCategory = forumRepository.findByCategoryOrderByDisplayOrderAsc(category);
+
+        int index = forumsInCategory.indexOf(forumToMove);
+
+        if (index > 0) {
+            Forum previousForum = forumsInCategory.get(index - 1);
+
+            int tempOrder = forumToMove.getDisplayOrder();
+            forumToMove.setDisplayOrder(previousForum.getDisplayOrder());
+            previousForum.setDisplayOrder(tempOrder);
+
+            forumRepository.save(forumToMove);
+            forumRepository.save(previousForum);
+
+            return forumToMove;
+        } else {
+            throw new BadRequestException(ErrorMessageConstants.FORUM_ALREADY_AT_TOP);
+        }
     }
 }
