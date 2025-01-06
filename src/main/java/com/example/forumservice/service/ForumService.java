@@ -18,6 +18,7 @@ import com.example.forumservice.repository.CategoryRepository;
 import com.example.forumservice.repository.ForumRepository;
 import com.example.forumservice.utils.DateUtils;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -176,4 +177,30 @@ public class ForumService {
             throw new BadRequestException(ErrorMessageConstants.FORUM_ALREADY_AT_TOP);
         }
     }
+
+    public Forum moveForumDown(Long forumId) {
+
+        Forum forumToMove = forumRepository.findById(forumId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessageConstants.FORUM_NOT_FOUND));
+
+        Category category = forumToMove.getCategory();
+
+        List<Forum> forumsInCategory = forumRepository.findByCategoryOrderByDisplayOrderAsc(category);
+
+        int index = forumsInCategory.indexOf(forumToMove);
+
+        if (index < forumsInCategory.size() - 1) {
+            Forum nextForum = forumsInCategory.get(index + 1);
+
+            int tempOrder = forumToMove.getDisplayOrder();
+            forumToMove.setDisplayOrder(nextForum.getDisplayOrder());
+            nextForum.setDisplayOrder(tempOrder);
+
+            forumRepository.save(forumToMove);
+            forumRepository.save(nextForum);
+        }
+
+        return forumToMove;
+    }
+
 }
