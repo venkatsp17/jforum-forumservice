@@ -2,14 +2,16 @@ package com.example.forumservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Forum implements Serializable {
+public class Topic implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,19 +20,14 @@ public class Forum implements Serializable {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Category category;
+    private Forum forum;
 
-    @OneToMany(mappedBy = "forum")
-    private List<Topic> topics;
+    @OneToMany(mappedBy = "topic")
+    private List<Post> posts;
 
     @Column(nullable = false)
-    private String name;
+    private String subject;
 
-    private String description;
-
-    private boolean moderated;
-
-    private boolean allowAnonymousPosts;
-
-    private int displayOrder;
+    @Column(nullable = false)
+    private Date createdAt;
 }

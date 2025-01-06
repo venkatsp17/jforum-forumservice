@@ -1,9 +1,9 @@
 package com.example.forumservice.repository;
 
-import com.example.forumservice.model.Category;
+import com.example.forumservice.model.Topic;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface TopicRepository extends JpaRepository<Topic, Long> {
 }
