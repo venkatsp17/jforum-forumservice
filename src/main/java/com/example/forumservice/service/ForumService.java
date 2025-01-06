@@ -9,6 +9,7 @@ import com.example.forumservice.constant.ValidationMessageConstants;
 import com.example.forumservice.dto.CategoryDTO;
 import com.example.forumservice.dto.ForumDTO;
 import com.example.forumservice.dto.ForumListResponse;
+import com.example.forumservice.dto.ForumCountDTO;
 import com.example.forumservice.dto.MostUsersEverOnlineDTO;
 import com.example.forumservice.exception.BadRequestException;
 import com.example.forumservice.exception.ResourceNotFoundException;
@@ -255,5 +256,18 @@ public class ForumService {
         ForumLimitedTime savedForumLimitedTime = forumLimitedTimeRepository.save(forumLimitedTime);
 
         return savedForumLimitedTime;
+    }
+
+    public ForumCountDTO getForumCounts(Long forumId) {
+
+        Forum forum = forumRepository.findById(forumId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessageConstants.FORUM_NOT_FOUND));
+
+        long topicCount = forumRepository.countTopicsByForumId(forumId);
+        long messageCount = forumRepository.countMessagesByForumId(forumId);
+
+        ForumCountDTO forumCountDTO = new ForumCountDTO(topicCount, messageCount);
+
+        return forumCountDTO;
     }
 }

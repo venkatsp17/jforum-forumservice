@@ -7,6 +7,7 @@ import com.example.forumservice.dto.ApiResponse;
 import com.example.forumservice.dto.ForumDTO;
 import com.example.forumservice.dto.ForumLimitedTimeDTO;
 import com.example.forumservice.dto.ForumListResponse;
+import com.example.forumservice.dto.ForumCountDTO;
 import com.example.forumservice.exception.BadRequestException;
 import com.example.forumservice.model.Forum;
 import com.example.forumservice.model.ForumLimitedTime;
@@ -150,6 +151,24 @@ public class ForumController {
                 HttpStatusConstants.OK.name(),
                 updatedForumLimitedTime,
                 "Limited time set successfully."
+        );
+
+        return ResponseEntity.status(HttpStatusConstants.OK).body(response);
+    }
+
+    @GetMapping("/{forumId}/count")
+    public ResponseEntity<ApiResponse<ForumCountDTO>> getForumCounts(@PathVariable Long forumId) {
+
+        if (forumId == null || forumId <= 0) {
+            throw new BadRequestException(ErrorMessageConstants.FORUM_ID_MUST_BE_VALID);
+        }
+
+        ForumCountDTO forumCountDTO = forumService.getForumCounts(forumId);
+
+        ApiResponse<ForumCountDTO> response = new ApiResponse<>(
+                HttpStatusConstants.OK.name(),
+                forumCountDTO,
+                "Counts retrieved successfully."
         );
 
         return ResponseEntity.status(HttpStatusConstants.OK).body(response);
