@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
+
+    Post findFirstByTopicIdOrderByCreatedAtDesc(Long topicId);
+
+    Post findFirstByForumIdOrderByCreatedAtDesc(Long forumId);
 }

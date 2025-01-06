@@ -18,4 +18,8 @@ public class ErrorMessageConstants {
     public static final String POST_REPORT_NOT_FOUND = "Post report not found.";
     public static final String USER_CANNOT_MANIPULATE_REPORT = "You do not have permission to manipulate this report.";
     public static final String MODERATION_LOGGING_DISABLED = "Moderation logging is disabled.";
+    public static final String TOPIC_NOT_FOUND = "Topic not found.";
+    public static final String INVALID_ID = "Invalid ID.";
+    public static final String INVALID_IS_TOPIC = "Invalid isTopic value.";
+    public static final String LAST_POST_NOT_FOUND = "Last post not found.";
 }

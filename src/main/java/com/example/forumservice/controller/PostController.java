@@ -2,11 +2,15 @@ package com.example.forumservice.controller;
 
 import com.example.forumservice.client.UserManagementClient;
 import com.example.forumservice.client.dto.UserDTO;
+import com.example.forumservice.constant.ApplicationConstants;
 import com.example.forumservice.constant.ErrorMessageConstants;
 import com.example.forumservice.constant.HttpStatusConstants;
 import com.example.forumservice.dto.ApiResponse;
+import com.example.forumservice.dto.LastPostDTO;
 import com.example.forumservice.dto.PostReportDTO;
 import com.example.forumservice.exception.BadRequestException;
+import com.example.forumservice.exception.ResourceNotFoundException;
+import com.example.forumservice.model.Post;
 import com.example.forumservice.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -35,7 +39,7 @@ public class PostController {
             throw new BadRequestException(ErrorMessageConstants.INVALID_POST_ID);
         }
 
-        String authToken = request.getHeader("X-auth-token");
+        String authToken = request.getHeader(ApplicationConstants.AUTH_HEADER_NAME);
         if (authToken == null || authToken.isEmpty()) {
             throw new BadRequestException(ErrorMessageConstants.AUTH_TOKEN_MISSING);
         }
@@ -53,5 +57,44 @@ public class PostController {
         );
 
         return ResponseEntity.status(HttpStatusConstants.CREATED).body(response);
+    }
+
+    @GetMapping("/last")
+    public ResponseEntity<ApiResponse<LastPostDTO>> getLastPost(
+            @RequestParam("id") Long id,
+            @RequestParam("isTopic") Boolean isTopic) {
+
+        if (id == null || id <= 0) {
+            throw new BadRequestException(ErrorMessageConstants.INVALID_ID);
+        }
+
+        if (isTopic == null) {
+            throw new BadRequestException(ErrorMessageConstants.INVALID_IS_TOPIC);
+        }
+
+        Post lastPost;
+        if (isTopic) {
+            lastPost = postService.getLastPostByTopicId(id);
+        } else {
+            lastPost = postService.getLastPostByForumId(id);
+        }
+
+        if (lastPost == null) {
+            throw new ResourceNotFoundException(ErrorMessageConstants.LAST_POST_NOT_FOUND);
+        }
+
+        LastPostDTO lastPostDTO = new LastPostDTO();
+        lastPostDTO.setPostId(lastPost.getId());
+        lastPostDTO.setContent(lastPost.getContent());
+        lastPostDTO.setCreatedAt(lastPost.getCreatedAt());
+        lastPostDTO.setUserId(lastPost.getUserId());
+
+        ApiResponse<LastPostDTO> response = new ApiResponse<>(
+                HttpStatusConstants.OK.name(),
+                lastPostDTO,
+                "Last post retrieved successfully."
+        );
+
+        return ResponseEntity.status(HttpStatusConstants.OK).body(response);
     }
 }

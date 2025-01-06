@@ -10,6 +10,8 @@ import com.example.forumservice.model.PostReport;
 import com.example.forumservice.model.PostReportStatus;
 import com.example.forumservice.repository.PostReportRepository;
 import com.example.forumservice.repository.PostRepository;
+import com.example.forumservice.repository.TopicRepository;
+import com.example.forumservice.repository.ForumRepository;
 import com.example.forumservice.utils.ModelMapperUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -23,10 +25,17 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final PostReportRepository postReportRepository;
+    private final TopicRepository topicRepository;
+    private final ForumRepository forumRepository;
 
-    public PostService(PostRepository postRepository, PostReportRepository postReportRepository) {
+    public PostService(PostRepository postRepository,
+                       PostReportRepository postReportRepository,
+                       TopicRepository topicRepository,
+                       ForumRepository forumRepository) {
         this.postRepository = postRepository;
         this.postReportRepository = postReportRepository;
+        this.topicRepository = topicRepository;
+        this.forumRepository = forumRepository;
     }
 
     public void reportPost(Long postId, String description, Long userId) {
@@ -82,5 +91,23 @@ public class PostService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessageConstants.POST_REPORT_NOT_FOUND));
 
         postReportRepository.delete(report);
+    }
+
+    public Post getLastPostByTopicId(Long topicId) {
+
+        if (!topicRepository.existsById(topicId)) {
+            throw new ResourceNotFoundException(ErrorMessageConstants.TOPIC_NOT_FOUND);
+        }
+
+        return postRepository.findFirstByTopicIdOrderByCreatedAtDesc(topicId);
+    }
+
+    public Post getLastPostByForumId(Long forumId) {
+
+        if (!forumRepository.existsById(forumId)) {
+            throw new ResourceNotFoundException(ErrorMessageConstants.FORUM_NOT_FOUND);
+        }
+
+        return postRepository.findFirstByForumIdOrderByCreatedAtDesc(forumId);
     }
 }

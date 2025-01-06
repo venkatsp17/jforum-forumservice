@@ -30,4 +30,7 @@ public class Post implements Serializable {
 
     @Column(nullable = false)
     private Date createdAt;
+
+    @Column(nullable = false)
+    private Long userId;
 }
