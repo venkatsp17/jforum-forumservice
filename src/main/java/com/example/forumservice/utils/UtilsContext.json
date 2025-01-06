@@ -1,69 +1,41 @@
-[
-  {
-    "fileName": "DateUtils.java",
-    "package": "com.example.forumservice.utils",
-    "className": "DateUtils",
-    "description": "This class provides utility methods for date and time operations.",
-    "methods": [
-      {
-        "functionName": "getCurrentDate",
-        "description": "Retrieves the current date.",
-        "context": "Returns the current system date.",
-        "inputs": [],
-        "outputs": [
-          {
-            "type": "java.time.LocalDate",
-            "description": "Represents the current date."
-          }
+{
+    "ModelMapperUtils": {
+        "description": "Utility class for mapping between entities and DTOs.",
+        "methods": [
+            {
+                "name": "mapToPostReportDTO",
+                "description": "Maps PostReport entity to PostReportDTO.",
+                "parameters": ["PostReport postReport"],
+                "returnType": "PostReportDTO"
+            },
+            {
+                "name": "mapToModerationLogDTO",
+                "description": "Maps ModerationLog entity to ModerationLogDTO.",
+                "parameters": ["ModerationLog moderationLog"],
+                "returnType": "ModerationLogDTO"
+            }
         ]
-      },
-      {
-        "functionName": "getCurrentTime",
-        "description": "Retrieves the current time.",
-        "context": "Returns the current system time.",
-        "inputs": [],
-        "outputs": [
-          {
-            "type": "java.time.LocalTime",
-            "description": "Represents the current time."
-          }
+    },
+    "DateUtils": {
+        "description": "Utility class for handling date and time operations.",
+        "methods": [
+            {
+                "name": "getCurrentTimestamp",
+                "description": "Returns the current timestamp.",
+                "parameters": [],
+                "returnType": "Date"
+            }
         ]
-      },
-      {
-        "functionName": "getCurrentDateTime",
-        "description": "Retrieves the current date and time.",
-        "context": "Returns the current system date and time.",
-        "inputs": [],
-        "outputs": [
-          {
-            "type": "java.time.LocalDateTime",
-            "description": "Represents the current date and time."
-          }
+    },
+    "ConfigUtils": {
+        "description": "Utility class for accessing application configuration settings.",
+        "methods": [
+            {
+                "name": "isModerationLoggingEnabled",
+                "description": "Checks if moderation logging is enabled.",
+                "parameters": [],
+                "returnType": "boolean"
+            }
         ]
-      },
-      {
-        "functionName": "formatDateTimeWithPattern",
-        "description": "Retrieves the formatted date time string in the given pattern.",
-        "context": "Retrieves the formatted date time string.",
-        "inputs": [
-          {
-            "param": "dateTime",
-            "type": "java.time.LocalDateTime",
-            "description": "Date Time input."
-          },
-          {
-            "param": "pattern",
-            "type": "string",
-            "description": "Pattern to modify the date time format."
-          }
-        ],
-        "outputs": [
-          {
-            "type": "string",
-            "description": "Represents the formatted date time string."
-          }
-        ]
-      }
-    ]
-  }
-]
+    }
+}

@@ -17,4 +17,5 @@ public class ErrorMessageConstants {
     public static final String INVALID_REPORT_ID = "Invalid report ID.";
     public static final String POST_REPORT_NOT_FOUND = "Post report not found.";
     public static final String USER_CANNOT_MANIPULATE_REPORT = "You do not have permission to manipulate this report.";
+    public static final String MODERATION_LOGGING_DISABLED = "Moderation logging is disabled.";
 }
