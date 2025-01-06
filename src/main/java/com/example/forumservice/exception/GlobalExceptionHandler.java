@@ -24,11 +24,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Object>> handleInternalServerException(HttpServletRequest request,
                                                                              HttpServletResponse response,
                                                                              InternalServerException e) {
-
-
         /* TODO: Add Exception log to table */
 
         ApiResponse<Object> exception = new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.name(), e.getMessage());
         return new ResponseEntity<>(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleResourceNotFoundException(HttpServletRequest request,
+                                                                               HttpServletResponse response,
+                                                                               ResourceNotFoundException e) {
+        /* TODO: Add Exception log to table */
+
+        ApiResponse<Object> exception = new ApiResponse<>(HttpStatus.NOT_FOUND.name(), e.getMessage());
+        return new ResponseEntity<>(exception, HttpStatus.NOT_FOUND);
     }
 }

@@ -1,0 +1,28 @@
+server:
+  port: ${PORT:8777}
+
+application:
+  name: DEMO-APP
+  description: DemoApp
+  development-mode: true
+
+spring:
+  jpa.properties.hibernate.dialect: org.hibernate.dialect.MySQLDialect
+  datasource:
+    url: ${DB_CONNECTION_URL:jdbc:mysql://127.0.0.1:3306/mydb}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
+  jpa:
+    properties:
+      format_sql: true
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+    org.springframework: ${LOG_LEVEL:ERROR} 
+    org.hibernate: ${LOG_LEVEL:ERROR} 
+  pattern:
+    console: "%level %d [%logger %M] : %replace(%msg){'\n','\u2028'} %replace(%xException){'\n','\u2028'}%nopex%n"
