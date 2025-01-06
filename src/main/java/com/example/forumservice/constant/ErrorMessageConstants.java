@@ -13,4 +13,5 @@ public class ErrorMessageConstants {
     public static final String INVALID_POST_ID = "Invalid post ID.";
     public static final String AUTH_TOKEN_MISSING = "Authentication token is missing.";
     public static final String USER_NOT_FOUND = "User not found.";
+    public static final String INVALID_PAGE_NUMBER = "Page number must be greater than zero.";
 }

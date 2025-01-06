@@ -1,8 +1,11 @@
 package com.example.forumservice.controller;
 
+import com.example.forumservice.constant.ErrorMessageConstants;
 import com.example.forumservice.constant.HttpStatusConstants;
 import com.example.forumservice.dto.ApiResponse;
+import com.example.forumservice.dto.PaginatedResponseDTO;
 import com.example.forumservice.dto.PostReportDTO;
+import com.example.forumservice.exception.BadRequestException;
 import com.example.forumservice.model.PostReport;
 import com.example.forumservice.service.PostService;
 import com.example.forumservice.utils.ModelMapperUtils;
@@ -35,6 +38,25 @@ public class PostReportController {
                 HttpStatusConstants.OK.name(),
                 unresolvedReportsDTO,
                 "Unresolved post reports retrieved successfully."
+        );
+
+        return ResponseEntity.status(HttpStatusConstants.OK).body(response);
+    }
+
+    @GetMapping("/resolved")
+    public ResponseEntity<ApiResponse<PaginatedResponseDTO<PostReportDTO>>> listResolvedPostReports(
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
+
+        if (page == null || page <= 0) {
+            throw new BadRequestException(ErrorMessageConstants.INVALID_PAGE_NUMBER);
+        }
+
+        PaginatedResponseDTO<PostReportDTO> paginatedReports = postService.getPaginatedResolvedPostReports(page);
+
+        ApiResponse<PaginatedResponseDTO<PostReportDTO>> response = new ApiResponse<>(
+                HttpStatusConstants.OK.name(),
+                paginatedReports,
+                "Resolved post reports retrieved successfully."
         );
 
         return ResponseEntity.status(HttpStatusConstants.OK).body(response);

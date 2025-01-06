@@ -1,16 +1,22 @@
 package com.example.forumservice.service;
 
+import com.example.forumservice.constant.ApplicationConstants;
 import com.example.forumservice.constant.ErrorMessageConstants;
+import com.example.forumservice.dto.PaginatedResponseDTO;
+import com.example.forumservice.dto.PostReportDTO;
 import com.example.forumservice.exception.ResourceNotFoundException;
 import com.example.forumservice.model.Post;
 import com.example.forumservice.model.PostReport;
 import com.example.forumservice.model.PostReportStatus;
-import com.example.forumservice.repository.PostRepository;
 import com.example.forumservice.repository.PostReportRepository;
+import com.example.forumservice.repository.PostRepository;
+import com.example.forumservice.utils.ModelMapperUtils;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -40,5 +46,24 @@ public class PostService {
 
     public List<PostReport> getUnresolvedPostReports() {
         return postReportRepository.findByStatus(PostReportStatus.UNRESOLVED);
+    }
+
+    public PaginatedResponseDTO<PostReportDTO> getPaginatedResolvedPostReports(int page) {
+
+        int pageSize = ApplicationConstants.RESOLVED_REPORTS_PAGE_SIZE;
+
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("reportDate").descending());
+
+        Page<PostReport> reportsPage = postReportRepository.findByStatus(PostReportStatus.RESOLVED, pageable);
+
+        List<PostReportDTO> reportsDTO = reportsPage.getContent().stream()
+                .map(ModelMapperUtils::mapToPostReportDTO)
+                .collect(Collectors.toList());
+
+        PaginatedResponseDTO<PostReportDTO> paginatedResponse = new PaginatedResponseDTO<>();
+        paginatedResponse.setPage(page);
+        paginatedResponse.setReports(reportsDTO);
+
+        return paginatedResponse;
     }
 }
