@@ -221,4 +221,39 @@ public class ForumService {
 
         return forumLimitedTimeOptional.map(ForumLimitedTime::getLimitedTime).orElse(0L);
     }
+
+    public ForumLimitedTime setForumLimitedTime(Long forumId, Long limitedTime) {
+
+        if (forumId == null || forumId <= 0) {
+            throw new BadRequestException(ErrorMessageConstants.FORUM_ID_MUST_BE_VALID);
+        }
+
+        if (limitedTime == null) {
+            throw new BadRequestException(ValidationMessageConstants.FORUM_LIMITED_TIME_REQUIRED);
+        }
+
+        if (limitedTime < 0) {
+            throw new BadRequestException(ValidationMessageConstants.FORUM_LIMITED_TIME_MUST_BE_NON_NEGATIVE);
+        }
+
+        Forum forum = forumRepository.findById(forumId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessageConstants.FORUM_NOT_FOUND));
+
+        Optional<ForumLimitedTime> forumLimitedTimeOptional = forumLimitedTimeRepository.findByForum(forum);
+
+        ForumLimitedTime forumLimitedTime;
+
+        if (forumLimitedTimeOptional.isPresent()) {
+            forumLimitedTime = forumLimitedTimeOptional.get();
+            forumLimitedTime.setLimitedTime(limitedTime);
+        } else {
+            forumLimitedTime = new ForumLimitedTime();
+            forumLimitedTime.setForum(forum);
+            forumLimitedTime.setLimitedTime(limitedTime);
+        }
+
+        ForumLimitedTime savedForumLimitedTime = forumLimitedTimeRepository.save(forumLimitedTime);
+
+        return savedForumLimitedTime;
+    }
 }

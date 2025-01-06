@@ -2,11 +2,14 @@ package com.example.forumservice.controller;
 
 import com.example.forumservice.constant.ErrorMessageConstants;
 import com.example.forumservice.constant.HttpStatusConstants;
+import com.example.forumservice.constant.ValidationMessageConstants;
 import com.example.forumservice.dto.ApiResponse;
 import com.example.forumservice.dto.ForumDTO;
+import com.example.forumservice.dto.ForumLimitedTimeDTO;
 import com.example.forumservice.dto.ForumListResponse;
 import com.example.forumservice.exception.BadRequestException;
 import com.example.forumservice.model.Forum;
+import com.example.forumservice.model.ForumLimitedTime;
 import com.example.forumservice.service.ForumService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -127,6 +130,26 @@ public class ForumController {
                 HttpStatusConstants.OK.name(),
                 limitedTime,
                 "Limited time retrieved successfully."
+        );
+
+        return ResponseEntity.status(HttpStatusConstants.OK).body(response);
+    }
+
+    @PostMapping("/{forumId}/limitedTime")
+    public ResponseEntity<ApiResponse<ForumLimitedTime>> setForumLimitedTime(
+            @PathVariable Long forumId,
+            @Valid @RequestBody ForumLimitedTimeDTO forumLimitedTimeDTO) {
+
+        if (forumId == null || forumId <= 0) {
+            throw new BadRequestException(ErrorMessageConstants.FORUM_ID_MUST_BE_VALID);
+        }
+
+        ForumLimitedTime updatedForumLimitedTime = forumService.setForumLimitedTime(forumId, forumLimitedTimeDTO.getLimitedTime());
+
+        ApiResponse<ForumLimitedTime> response = new ApiResponse<>(
+                HttpStatusConstants.OK.name(),
+                updatedForumLimitedTime,
+                "Limited time set successfully."
         );
 
         return ResponseEntity.status(HttpStatusConstants.OK).body(response);
