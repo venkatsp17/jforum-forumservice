@@ -67,12 +67,20 @@ public class PostService {
         return paginatedResponse;
     }
 
-    public void resolvePostReport(Long reportId) {
+    public void resolvePostReport(Long reportId, Long userId) {
 
         PostReport report = postReportRepository.findById(reportId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessageConstants.POST_REPORT_NOT_FOUND));
 
         report.setStatus(PostReportStatus.RESOLVED);
         postReportRepository.save(report);
+    }
+
+    public void deletePostReport(Long reportId) {
+
+        PostReport report = postReportRepository.findById(reportId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessageConstants.POST_REPORT_NOT_FOUND));
+
+        postReportRepository.delete(report);
     }
 }

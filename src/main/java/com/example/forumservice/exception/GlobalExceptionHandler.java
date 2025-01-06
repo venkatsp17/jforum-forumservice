@@ -51,4 +51,14 @@ public class GlobalExceptionHandler {
         ApiResponse<Object> exception = new ApiResponse<>(HttpStatus.BAD_REQUEST.name(), "Invalid input: " + e.getMessage());
         return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ApiResponse<Object>> handleForbiddenException(HttpServletRequest request,
+                                                                        HttpServletResponse response,
+                                                                        ForbiddenException e) {
+        /* TODO: Add Exception log to table */
+
+        ApiResponse<Object> exception = new ApiResponse<>(HttpStatus.FORBIDDEN.name(), e.getMessage());
+        return new ResponseEntity<>(exception, HttpStatus.FORBIDDEN);
+    }
 }
