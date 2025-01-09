@@ -2,27 +2,31 @@ server:
   port: ${PORT:8777}
 
 application:
-  name: DEMO-APP
-  description: DemoApp
+  name: forumservice
+  description: forumservice
   development-mode: true
 
 spring:
-  jpa.properties.hibernate.dialect: org.hibernate.dialect.MySQLDialect
   datasource:
-    url: ${DB_CONNECTION_URL:jdbc:mysql://127.0.0.1:3306/mydb}
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:password}
+    url: jdbc:mysql://127.0.0.1:3306/forum_service  # Adjust to match your database name
+    username: root  # Adjust if your MySQL user is different
+    password: Madmen@170204    # If no password, leave it blank; otherwise, provide it here
   jpa:
     properties:
+      hibernate.dialect: org.hibernate.dialect.MySQLDialect
       format_sql: true
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update  
+
+moderation:
+  logging:
+    enabled: true
 
 logging:
   level:
     root: ${LOG_LEVEL:INFO}
-    org.springframework: ${LOG_LEVEL:ERROR} 
-    org.hibernate: ${LOG_LEVEL:ERROR} 
+    org.springframework: ${LOG_LEVEL:ERROR}
+    org.hibernate: ${LOG_LEVEL:ERROR}
   pattern:
     console: "%level %d [%logger %M] : %replace(%msg){'\n','\u2028'} %replace(%xException){'\n','\u2028'}%nopex%n"

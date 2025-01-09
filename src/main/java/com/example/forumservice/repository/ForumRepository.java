@@ -2,8 +2,6 @@ package com.example.forumservice.repository;
 
 import com.example.forumservice.model.Forum;
 import com.example.forumservice.model.Category;
-import com.example.forumservice.model.Post;
-import com.example.forumservice.model.Topic;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

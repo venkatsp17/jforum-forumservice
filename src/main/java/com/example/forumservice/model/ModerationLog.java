@@ -30,7 +30,4 @@ public class ModerationLog {
 
     private Long topicId;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private User user;
 }

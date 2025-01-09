@@ -7,6 +7,7 @@ import com.example.forumservice.constant.ErrorMessageConstants;
 import com.example.forumservice.constant.HttpStatusConstants;
 import com.example.forumservice.dto.ApiResponse;
 import com.example.forumservice.dto.LastPostDTO;
+import com.example.forumservice.dto.PostDTO;
 import com.example.forumservice.dto.PostReportDTO;
 import com.example.forumservice.exception.BadRequestException;
 import com.example.forumservice.exception.ResourceNotFoundException;
@@ -14,6 +15,9 @@ import com.example.forumservice.model.Post;
 import com.example.forumservice.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -96,5 +100,16 @@ public class PostController {
         );
 
         return ResponseEntity.status(HttpStatusConstants.OK).body(response);
+    }
+
+    @GetMapping("/topic/{topicId}")
+    public ResponseEntity<ApiResponse<List<PostDTO>>> getPostsByTopic(@PathVariable Long topicId) {
+        List<PostDTO> posts = postService.getPostsByTopic(topicId);
+        ApiResponse<List<PostDTO>> response = new ApiResponse<>(
+                "OK",
+                posts,
+                "Posts retrieved successfully."
+        );
+        return ResponseEntity.ok(response);
     }
 }

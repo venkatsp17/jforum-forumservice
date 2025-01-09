@@ -117,9 +117,9 @@ public class PostReportController {
             throw new BadRequestException(ErrorMessageConstants.USER_NOT_FOUND);
         }
 
-        if (!currentUser.getRoles().contains("ADMIN")) {
-            throw new ForbiddenException(ErrorMessageConstants.USER_CANNOT_MANIPULATE_REPORT);
-        }
+        // if (!currentUser.getRoles().contains("ADMIN")) {
+        //     throw new ForbiddenException(ErrorMessageConstants.USER_CANNOT_MANIPULATE_REPORT);
+        // }
 
         postService.deletePostReport(reportId);
 

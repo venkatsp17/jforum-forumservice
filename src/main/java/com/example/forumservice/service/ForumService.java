@@ -129,7 +129,7 @@ public class ForumService {
         int totalRegisteredUsers = userManagementClient.getTotalRegisteredUsers();
         int totalMessages = forumRepository.getTotalMessages();
         int totalLoggedUsers = userManagementClient.getTotalLoggedUsers();
-        int totalAnonymousUsers = userManagementClient.getTotalAnonymousUsers();
+        int totalAnonymousUsers = userManagementClient.getTotalLoggedUsers();
         UserDTO lastRegisteredUser = userManagementClient.getLastRegisteredUser();
         int postsPerPage = ApplicationConstants.POSTS_PER_PAGE;
 

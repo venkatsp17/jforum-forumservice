@@ -3,6 +3,7 @@ package com.example.forumservice.service;
 import com.example.forumservice.constant.ApplicationConstants;
 import com.example.forumservice.constant.ErrorMessageConstants;
 import com.example.forumservice.dto.PaginatedResponseDTO;
+import com.example.forumservice.dto.PostDTO;
 import com.example.forumservice.dto.PostReportDTO;
 import com.example.forumservice.exception.ResourceNotFoundException;
 import com.example.forumservice.model.Post;
@@ -109,5 +110,25 @@ public class PostService {
         }
 
         return postRepository.findFirstByForumIdOrderByCreatedAtDesc(forumId);
+    }
+
+     /**
+     * Fetch all posts for a given topic ID and map them to DTOs.
+     *
+     * @param topicId ID of the topic
+     * @return List of PostDTOs
+     */
+    public List<PostDTO> getPostsByTopic(Long topicId) {
+        List<Post> posts = postRepository.findByTopicId(topicId);
+        return posts.stream()
+                .map(post -> PostDTO.builder()
+                        .id(post.getId())
+                        .topicId(post.getTopic().getId())
+                        .forumId(post.getForum().getId())
+                        .content(post.getContent())
+                        .createdAt(post.getCreatedAt())
+                        .userId(post.getUserId())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

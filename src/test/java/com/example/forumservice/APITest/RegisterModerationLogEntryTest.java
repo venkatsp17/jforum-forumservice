@@ -1,14 +1,14 @@
 package com.example.forumservice.APITest;
 
 import com.example.forumservice.ForumServiceApplication;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
@@ -20,9 +20,10 @@ import java.util.Map;
 import java.util.HashMap;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@RunWith(SpringRunner.class)
+@TestMethodOrder(OrderAnnotation.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = ForumServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
@@ -36,13 +37,14 @@ public class RegisterModerationLogEntryTest {
     private static final String ENDPOINT = "/moderation-log";
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         // Any necessary setup before tests
     }
 
     // Success scenario: Valid request payload
     @Test
+    @Order(1)
     public void test1_createModerationLogEntry_Success() throws Exception {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("log", "This is a test moderation log entry.");
@@ -62,6 +64,7 @@ public class RegisterModerationLogEntryTest {
 
     // Failure scenario: Missing required field 'log'
     @Test
+    @Order(2)
     public void test2_createModerationLogEntry_MissingRequiredField() throws Exception {
         Map<String, Object> requestBody = new HashMap<>();
         // 'log' field is missing
@@ -81,6 +84,7 @@ public class RegisterModerationLogEntryTest {
 
     // Failure scenario: Invalid data types
     @Test
+    @Order(3)
     public void test3_createModerationLogEntry_InvalidDataTypes() throws Exception {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("log", 12345); // Should be a string
@@ -100,6 +104,7 @@ public class RegisterModerationLogEntryTest {
 
     // Failure scenario: Exceeding maximum string length
     @Test
+    @Order(4)
     public void test4_createModerationLogEntry_ExceedMaxStringLength() throws Exception {
         // Assuming maximum length for 'log' is 10000 characters
         String longString = new String(new char[10001]).replace('\0', 'a');
@@ -122,6 +127,7 @@ public class RegisterModerationLogEntryTest {
 
     // Failure scenario: Missing request body
     @Test
+    @Order(5)
     public void test5_createModerationLogEntry_MissingRequestBody() throws Exception {
         mockMvc.perform(post(ENDPOINT)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -130,6 +136,7 @@ public class RegisterModerationLogEntryTest {
 
     // Failure scenario: Malformed JSON
     @Test
+    @Order(6)
     public void test6_createModerationLogEntry_MalformedJSON() throws Exception {
         String malformedJson = "{ \"log\": \"This is a test moderation log entry\", "; // Incomplete JSON
 
@@ -141,6 +148,7 @@ public class RegisterModerationLogEntryTest {
 
     // Success scenario: Edge case with large payload
     @Test
+    @Order(7)
     public void test7_createModerationLogEntry_LargePayload() throws Exception {
         // Create a large string but within acceptable limits
         StringBuilder sb = new StringBuilder();
@@ -167,6 +175,7 @@ public class RegisterModerationLogEntryTest {
 
     // Failure scenario: Invalid date format
     @Test
+    @Order(8)
     public void test8_createModerationLogEntry_InvalidDateFormat() throws Exception {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("log", "This is a test moderation log entry.");
@@ -186,6 +195,7 @@ public class RegisterModerationLogEntryTest {
 
     // Failure scenario: Null values for non-required fields
     @Test
+    @Order(9)
     public void test9_createModerationLogEntry_NullValues() throws Exception {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("log", "This is a test moderation log entry.");
@@ -205,6 +215,7 @@ public class RegisterModerationLogEntryTest {
 
     // Failure scenario: Boundary value for integers
     @Test
+    @Order(10)
     public void test10_createModerationLogEntry_BoundaryValuesForIntegers() throws Exception {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("log", "This is a test moderation log entry.");

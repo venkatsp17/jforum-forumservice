@@ -30,4 +30,7 @@ public class Topic implements Serializable {
 
     @Column(nullable = false)
     private Date createdAt;
+
+    @Column(nullable = false)
+    private Integer viewCount = 0;
 }

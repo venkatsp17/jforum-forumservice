@@ -2,16 +2,14 @@ package com.example.forumservice.APITest;
 
 import com.example.forumservice.ForumServiceApplication;
 import com.example.forumservice.model.ForumLimitedTime;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,12 +18,11 @@ import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = ForumServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 @Sql(scripts = {"/sql/SetForumLimitedTime/schema.sql", "/sql/SetForumLimitedTime/data.sql"})
 public class SetForumLimitedTimeTest {
 
@@ -41,7 +38,7 @@ public class SetForumLimitedTimeTest {
         String url = "/forums/" + forumId + "/limitedTime";
 
         ForumLimitedTime forumLimitedTime = new ForumLimitedTime();
-        forumLimitedTime.setLimitedTime(3600); // Set limited time to 3600 seconds
+        forumLimitedTime.setLimitedTime(3600L); // Set limited time to 3600 seconds
 
         String requestBody = objectMapper.writeValueAsString(forumLimitedTime);
 
@@ -57,7 +54,7 @@ public class SetForumLimitedTimeTest {
         String url = "/forums/" + forumId + "/limitedTime";
 
         ForumLimitedTime forumLimitedTime = new ForumLimitedTime();
-        forumLimitedTime.setLimitedTime(3600);
+        forumLimitedTime.setLimitedTime(3600L);
 
         String requestBody = objectMapper.writeValueAsString(forumLimitedTime);
 
@@ -98,7 +95,7 @@ public class SetForumLimitedTimeTest {
         String url = "/forums/" + forumId + "/limitedTime";
 
         ForumLimitedTime forumLimitedTime = new ForumLimitedTime();
-        forumLimitedTime.setLimitedTime(3600);
+        forumLimitedTime.setLimitedTime(3600L);
 
         String requestBody = objectMapper.writeValueAsString(forumLimitedTime);
 
@@ -158,7 +155,7 @@ public class SetForumLimitedTimeTest {
         String url = "/forums/" + forumId + "/limitedTime";
 
         ForumLimitedTime forumLimitedTime = new ForumLimitedTime();
-        forumLimitedTime.setLimitedTime(-3600); // Negative limited time
+        forumLimitedTime.setLimitedTime(-3600L); // Negative limited time
 
         String requestBody = objectMapper.writeValueAsString(forumLimitedTime);
 
@@ -174,7 +171,7 @@ public class SetForumLimitedTimeTest {
         String url = "/forums/" + forumId + "/limitedTime";
 
         ForumLimitedTime forumLimitedTime = new ForumLimitedTime();
-        forumLimitedTime.setLimitedTime(0); // Zero limited time
+        forumLimitedTime.setLimitedTime(0L); // Zero limited time
 
         String requestBody = objectMapper.writeValueAsString(forumLimitedTime);
 

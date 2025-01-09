@@ -2,17 +2,23 @@ package com.example.forumservice.controller;
 
 import com.example.forumservice.constant.ErrorMessageConstants;
 import com.example.forumservice.constant.HttpStatusConstants;
-import com.example.forumservice.constant.ValidationMessageConstants;
 import com.example.forumservice.dto.ApiResponse;
 import com.example.forumservice.dto.ForumDTO;
 import com.example.forumservice.dto.ForumLimitedTimeDTO;
 import com.example.forumservice.dto.ForumListResponse;
+import com.example.forumservice.dto.TopicDetailsDTO;
 import com.example.forumservice.dto.ForumCountDTO;
 import com.example.forumservice.exception.BadRequestException;
 import com.example.forumservice.model.Forum;
 import com.example.forumservice.model.ForumLimitedTime;
 import com.example.forumservice.service.ForumService;
+import com.example.forumservice.service.TopicService;
+
 import jakarta.validation.Valid;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +27,9 @@ import org.springframework.web.bind.annotation.*;
 public class ForumController {
 
     private final ForumService forumService;
+
+    @Autowired
+    private TopicService topicService;
 
     public ForumController(ForumService forumService) {
         this.forumService = forumService;
@@ -172,5 +181,16 @@ public class ForumController {
         );
 
         return ResponseEntity.status(HttpStatusConstants.OK).body(response);
+    }
+
+    @GetMapping("/{forumId}/topics")
+    public ResponseEntity<ApiResponse<List<TopicDetailsDTO>>> getTopicsByForum(@PathVariable Long forumId) {
+        List<TopicDetailsDTO> topics = topicService.getTopicsByForum(forumId);
+        ApiResponse<List<TopicDetailsDTO>> response = new ApiResponse<>(
+                HttpStatusConstants.OK.name(),
+                topics,
+                "Topics retrieved successfully."
+        );
+        return ResponseEntity.ok(response);
     }
 }
