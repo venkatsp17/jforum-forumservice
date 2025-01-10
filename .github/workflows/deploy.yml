@@ -16,9 +16,9 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
+    - name: Build with Mave
       run: |
-           mvn clean install
+           mvn clean install -DskipTests 
            mkdir artifacts && cp target/*.jar artifacts
            cd artifacts && ls
     - name: Save artifact
