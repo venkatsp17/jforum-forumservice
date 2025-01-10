@@ -52,7 +52,7 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Pull Image from Docker Hub
-      run: sudo docker pull mohibgazi/jforum_forumservice:latest
+      run: sudo docker pull venkatsp17/jforum_forumservice:latest
 
     - name: SSH to EC2 and deploy Docker container
       run: |
