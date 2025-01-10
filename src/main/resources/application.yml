@@ -8,16 +8,17 @@ application:
 
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/forum_service  # Adjust to match your database name
-    username: root  # Adjust if your MySQL user is different
-    password: Madmen@170204    # If no password, leave it blank; otherwise, provide it here
+    url: ${SPRING_DATASOURCE_URL}  # Adjust to match your database name
+    username: ${SPRING_DATASOURCE_USERNAME}  # Adjust if your MySQL user is different
+    password: ${SPRING_DATASOURCE_PASSWORD}    # If no password, leave it blank; otherwise, provide it here
+    driver-class-name: com.mysql.cj.jdbc.Driver  # Add this line for MySQL driver
   jpa:
     properties:
       hibernate.dialect: org.hibernate.dialect.MySQLDialect
       format_sql: true
     show-sql: true
     hibernate:
-      ddl-auto: update  
+      ddl-auto: update  # Change to validate/none for production environments
 
 moderation:
   logging:
