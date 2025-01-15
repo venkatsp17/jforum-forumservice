@@ -143,9 +143,7 @@
                 <version>3.8.1</version>
                 <configuration>
                     <release>21</release> <!-- Set release to Java 21 -->
-                    <compilerArgs>
-                        <arg>-parameters</arg> <!-- Add -parameters flag -->
-                    </compilerArgs>
+                    <compilerArgument>-parameters</compilerArgument>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
