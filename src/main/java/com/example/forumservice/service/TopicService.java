@@ -26,7 +26,7 @@ public class TopicService {
 
     public List<TopicDetailsDTO> getTopicsByForumWithPostDetailsDTOs(Long forumId) {
         logger.debug("Fetching topics for forumId: {}", forumId); // Log the input parameter (forumId)
-        
+        System.out.println("Fetching topics for forumId: " + forumId); // Print the input parameter (forumId)
         List<Object[]> rawTopics = topicRepository.getTopicsWithPostDetailsByForumId(forumId);
 
         // Log the raw topics data fetched from the database

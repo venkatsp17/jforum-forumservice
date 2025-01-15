@@ -6,25 +6,30 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-// import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.query.Param;
 
-@Repository
+
 public interface TopicRepository extends JpaRepository<Topic, Long> {
 
     @Query("""
-        SELECT t.id AS topicId,
-               t.subject AS subject,
-               COUNT(p.id) AS postCount,
-               MAX(p.id) AS lastPostId,
-               MAX(p.createdAt) AS lastPostDate,
-               t.viewCount AS viewCount
-        FROM Topic t
+           SELECT t.id AS topicId,
+                  t.subject AS subject,
+                  COUNT(p.id) AS postCount,
+                  MAX(p.id) AS lastPostId,
+                  MAX(p.createdAt) AS lastPostDate,
+                  t.viewCount AS viewCount
+             FROM Topic t
         LEFT JOIN t.posts p
-        GROUP BY t.id, t.subject, t.viewCount
-        ORDER BY MAX(p.createdAt) DESC
+            WHERE t.forum.id = :forumId
+         GROUP BY t.id, t.subject, t.viewCount
+         ORDER BY MAX(p.createdAt) DESC
     """)
-
-    List<Object[]> getTopicsWithPostDetailsByForumId(Long forumId);
+    /**
+     * Retrieves topics with post details by forum ID.
+     *
+     * @param forumId the ID of the forum
+     * @return a list of objects containing topic details and post statistics
+     */
+    List<Object[]> getTopicsWithPostDetailsByForumId(@Param("forumId") Long forumId);
     
 }
