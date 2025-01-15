@@ -21,10 +21,10 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
                t.viewCount AS viewCount
         FROM Topic t
         LEFT JOIN t.posts p
-        WHERE t.forum.id = :forumId
+        WHERE t.forum.id = ?1
         GROUP BY t.id, t.subject, t.viewCount
         ORDER BY MAX(p.createdAt) DESC
     """)
-    List<Object[]> getTopicsWithPostDetailsByForumId(@Param("forumId") Long forumId);
+    List<Object[]> getTopicsWithPostDetailsByForumId(Long forumId);
     
 }
