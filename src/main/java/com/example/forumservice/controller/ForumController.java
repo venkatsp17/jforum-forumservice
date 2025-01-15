@@ -185,12 +185,15 @@ public class ForumController {
 
     @GetMapping("/{forumId}/topics")
     public ResponseEntity<ApiResponse<List<TopicDetailsDTO>>> getTopicsByForum(@PathVariable Long forumId) {
-        List<TopicDetailsDTO> topics = topicService.getTopicsByForum(forumId);
+        if (forumId == null || forumId <= 0) {
+            throw new BadRequestException(ErrorMessageConstants.FORUM_ID_MUST_BE_VALID);
+        }
+        List<TopicDetailsDTO> topics = topicService.getTopicsByForumWithPostDetailsDTOs(forumId);
         ApiResponse<List<TopicDetailsDTO>> response = new ApiResponse<>(
                 HttpStatusConstants.OK.name(),
                 topics,
                 "Topics retrieved successfully."
         );
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatusConstants.OK).body(response);
     }
 }
