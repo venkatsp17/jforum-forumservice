@@ -25,6 +25,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
         GROUP BY t.id, t.subject, t.viewCount
         ORDER BY MAX(p.createdAt) DESC
     """)
+    
     List<Object[]> getTopicsWithPostDetailsByForumId(Long forumId);
     
 }
