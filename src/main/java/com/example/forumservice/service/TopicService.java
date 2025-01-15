@@ -21,26 +21,27 @@ public class TopicService {
     }
 
     public List<TopicDetailsDTO> getTopicsByForum(Long forumId) {
-        List<Object[]> rawTopics = topicRepository.findTopicsWithPostDetailsByForumId(forumId);
+        List<Object[]> rawTopics = topicRepository.getTopicsWithPostDetails(forumId);
 
         System.out.println("Raw topics: " + rawTopics);
 
         return rawTopics.stream().map(row -> {
-            Long topicId = row[0] != null ? (Long) row[0] : -1L;
+            Long topicId = row[0] != null ? ((Number) row[0]).longValue() : -1L; // Ensure proper casting
             String subject = row[1] != null ? (String) row[1] : "Unknown Subject";
-            Long postCount = row[2] != null ? (Long) row[2] : 0L;
-            Long lastPostId = row[3] != null ? (Long) row[3] : -1L;
+            Long postCount = row[2] != null ? ((Number) row[2]).longValue() : 0L; // Cast Integer to Long
+            Long lastPostId = row[3] != null ? ((Number) row[3]).longValue() : -1L; // Cast Integer to Long
             Date lastPostDate = row[4] != null ? (Date) row[4] : new Date(0);
-            Integer viewCount = row[5] != null ? (Integer) row[5] : 0;
-
-            // Fetch the last author's username from the user microservice.
+            Integer viewCount = row[5] != null ? ((Number) row[5]).intValue() : 0; // Ensure Integer casting
+        
+            // Fetch the last author's username from the user microservice
             UserDTO lastAuthorUsername = userClient.getUsernameByPostId(lastPostId);
             if (lastAuthorUsername == null) {
                 lastAuthorUsername = new UserDTO();
                 lastAuthorUsername.setUsername("Unknown User");
             }
-
+        
             return new TopicDetailsDTO(topicId, subject, postCount, lastPostDate.toString(), lastAuthorUsername, viewCount);
         }).toList();
+        
     }
 }
