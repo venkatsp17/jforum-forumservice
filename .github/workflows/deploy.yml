@@ -47,14 +47,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Pull Image from Docker Hub
-      run: sudo docker pull venkatsp17/jforum_forumservice:latest
-
     - name: SSH to EC2 and deploy Docker container
       run: |
         # Ensure SSH key is added and EC2 access is available
@@ -63,7 +55,10 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
           # Stop the old container if it exists
           sudo docker rm -f jforum_forumservice-container || true
-    
+
+          # Pull the latest image from Docker Hub
+          sudo docker pull venkatsp17/jforum_forumservice:latest
+          
           # Run the new Docker container with MySQL connection details as environment variables
           sudo docker run -d -p 8777:8777 --name jforum_forumservice-container \
             -e SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}" \
