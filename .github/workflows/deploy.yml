@@ -49,6 +49,12 @@ jobs:
     steps:
     - name: SSH to EC2 and deploy Docker container
       run: |
+        # Update package list and install Docker if not installed
+        if ! command -v docker &> /dev/null; then
+          sudo apt update && sudo apt install -y docker.io
+          sudo systemctl start docker
+          sudo systemctl enable docker
+        fi
         # Ensure SSH key is added and EC2 access is available
         echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ec2_key.pem
         chmod 600 ec2_key.pem  # Set correct permissions for the key
