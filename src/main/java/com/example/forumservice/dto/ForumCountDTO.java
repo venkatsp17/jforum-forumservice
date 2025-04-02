@@ -11,3 +11,4 @@ public class ForumCountDTO {
     private long topicCount;
     private long messageCount;
 }
+
