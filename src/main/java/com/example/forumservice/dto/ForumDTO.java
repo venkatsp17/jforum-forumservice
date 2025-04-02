@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Size;
 public class ForumDTO {
 
     private Long id;
+    
 
     @NotBlank(message = ValidationMessageConstants.FORUM_NAME_REQUIRED)
     @Size(max = 255, message = ValidationMessageConstants.FORUM_NAME_MAX_LENGTH)
